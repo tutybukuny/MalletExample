@@ -18,9 +18,20 @@ public class TrainCRF {
 
         CRF crf = (CRF) ois.readObject();
 
-        PrintWriter writer = new PrintWriter("crfout.txt", "UTF-8");
+        InstanceList testData = new InstanceList(crf.getInputPipe());
+        testData.addThruPipe(new LineGroupIterator(new BufferedReader(
+                new InputStreamReader(new FileInputStream("Train.txt"))),
+                Pattern.compile("^\\s*$"), true));
 
-        crf.print(writer);
+        for (int i = 0; i < testData.size(); i++) {
+            Sequence input = (Sequence) testData.get(i).getData();
+            Sequence output = crf.transduce(input);
+            for (int j = 0; j < output.size(); j++) {
+//                System.out.println(input.get(j).toString() + " " + output.get(j));
+                System.out.println(output.get(j));
+            }
+            System.out.println("");
+        }
     }
 
     public TrainCRF(String trainingFilename, String testingFilename) throws IOException {
@@ -33,8 +44,8 @@ public class TrainCRF {
 
         pipes.add(new SimpleTaggerSentence2TokenSequence());
         pipes.add(new OffsetConjunctions(conjunctions));
-        //pipes.add(new FeaturesInWindow("PREV-", -1, 1));
-        pipes.add(new TokenTextCharSuffix("C1=", 1));
+        pipes.add(new FeaturesInWindow("B-", -3, 3));
+//        pipes.add(new TokenTextCharSuffix("C1=", 1));
 //        pipes.add(new TokenTextCharSuffix("C2=", 2));
 //        pipes.add(new TokenTextCharSuffix("C3=", 3));
 //        pipes.add(new RegexMatches("CAPITALIZED", Pattern.compile("^\\p{Lu}.*")));
@@ -82,9 +93,8 @@ public class TrainCRF {
     }
 
     public static void main(String[] args) throws Exception {
-        TrainCRF trainer = new TrainCRF("E:\\thien\\Learning\\NLP\\Project\\Data\\Tests\\v2\\Test1\\Train.txt",
-                "E:\\thien\\Learning\\NLP\\Project\\Data\\Tests\\v2\\Test1\\Test.txt");
-//        print();
+//        TrainCRF trainer = new TrainCRF("Train.txt", "Test.txt");
+        print();
     }
 
 }

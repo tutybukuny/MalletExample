@@ -4,8 +4,8 @@ import org.chasen.crfpp.Tagger;
 
 public class test {
 
-    private static final String JAVA_LIBRARY_PATH = "java.library.path";
-    private static final String SYS_PATHS = "sys_paths";
+//    private static final String JAVA_LIBRARY_PATH = "java.library.path";
+//    private static final String SYS_PATHS = "sys_paths";
 
     public static void main(String[] argv) {
         Tagger tagger = new Tagger("-m model -n2");
@@ -78,7 +78,7 @@ public class test {
 
     static {
         try {
-            System.loadLibrary("CRFPP");
+            System.loadLibrary("libcrfpp");
         } catch (UnsatisfiedLinkError e) {
             System.err.println("Cannot load the example native code.\nMake sure your LD_LIBRARY_PATH contains \'.\'\n" + e);
             System.exit(1);
